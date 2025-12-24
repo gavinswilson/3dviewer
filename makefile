@@ -1,9 +1,9 @@
 CC = gcc
 CFLAGS = `sdl2-config --cflags`
-LDFLAGS = `sdl2-config --libs` -lSDL2_ttf -lm
+LDFLAGS = `sdl2-config --libs` -lSDL2_ttf -lm -lSDL2_gfx
 
-TARGET = 3d
-SRC = main2.c
+TARGET = bounce
+SRC = main3.c
 
 all: $(TARGET)
 

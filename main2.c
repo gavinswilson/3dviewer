@@ -1,6 +1,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <stdio.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
+#include <math.h>
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -12,7 +14,7 @@ int clamp360(int v)
     return v;
 }
 
-#include <math.h>
+
 
 void drawAxes(SDL_Renderer *renderer, int cx, int cy, int size,
               int rx, int ry, int rz)
@@ -59,6 +61,19 @@ void drawAxes(SDL_Renderer *renderer, int cx, int cy, int size,
     }
 }
 
+void drawSun(SDL_Renderer *renderer, int cx, int cy, int size)
+{
+    filledCircleRGBA(renderer, cx, cy, size, 255, 255, 0, 255);
+    // SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+    // SDL_Rect square = { cx, cy, size, size }; // x, y, w, h
+    // SDL_RenderFillRect(renderer, &square);
+}
+
+
+void drawEllipse(SDL_Renderer *renderer, int cx, int cy, int rx, int ry)
+{
+    ellipseRGBA(renderer, cx, cy, rx, ry, 255, 255, 0, 255);
+}
 void updateText(SDL_Renderer *renderer, TTF_Font *font,
                 SDL_Texture **texture, SDL_Rect *rect,
                 const char *text, SDL_Color color,
@@ -98,7 +113,7 @@ int main(int argc, char *argv[])
     TTF_Init();
 
     window = SDL_CreateWindow(
-        "SDL Cached Text Example",
+        "3d Viewer",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         WINDOW_WIDTH,
@@ -118,6 +133,8 @@ int main(int argc, char *argv[])
     SDL_Color red = {255, 0, 0, 255};
     SDL_Color green = {0, 255, 0, 255};
     SDL_Color blue = {0, 0, 255, 255};
+    SDL_Color black = {0, 0, 0, 255};
+    SDL_Color yellow = {255, 255, 0, 255};
     int baseY = WINDOW_HEIGHT - 80;
 
     // Initial text creation
@@ -171,10 +188,14 @@ int main(int argc, char *argv[])
         SDL_RenderCopy(renderer, xTex, NULL, &xRect);
         SDL_RenderCopy(renderer, yTex, NULL, &yRect);
         SDL_RenderCopy(renderer, zTex, NULL, &zRect);
+        
         drawAxes(renderer,
                 120, WINDOW_HEIGHT - 40,  // center position
                 40,                       // axis length
                 x, y, z);                 // rotation values
+        drawSun(renderer, WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 10);
+        drawEllipse(renderer, WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 100, 50);
+
         SDL_RenderPresent(renderer);
         SDL_Delay(16); // ~60 FPS
     }
